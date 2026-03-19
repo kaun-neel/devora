@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/devora_logo.png" alt="DEVORA Logo" width="280"/>
+<img src="app/src/assets/devora_logo.png" alt="DEVORA Logo" width="280"/>
 
 <br/>
 <br/>
