@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { debugCode, executeCode } from '@/api/devora.js'
+import { useUserStore } from '@/composables/useUserStore.js'
+
+const { trackDebug, isLoggedIn } = useUserStore()
 
 const code = ref('')
 const result = ref(null)
@@ -52,6 +55,9 @@ const handleDebug = async () => {
   try {
     incrementUsage()
     result.value = await debugCode(code.value)
+    if (isLoggedIn.value) {
+      trackDebug(code.value, result.value ? result.value.language : null)
+    }
   } catch (err) {
     error.value = err.message
   } finally {

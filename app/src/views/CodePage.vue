@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { generateCode } from '@/api/devora.js'
+import { useUserStore } from '@/composables/useUserStore.js'
+
+const { trackInquiry, isLoggedIn } = useUserStore()
 
 const prompt = ref('')
 const language = ref('auto')
@@ -15,6 +18,9 @@ const handleGenerate = async () => {
   result.value = null
   try {
     result.value = await generateCode(prompt.value, language.value)
+    if (isLoggedIn.value) {
+      trackInquiry(prompt.value, language.value === 'auto' && result.value ? result.value.language : language.value)
+    }
   } catch (err) {
     error.value = err.message
   } finally {

@@ -21,19 +21,24 @@ const router = createRouter({
     {
       path: '/profile',
       name: 'profile',
-      component: ProfilePage
+      component: ProfilePage,
+      meta: { requiresAuth: true }
     },
     {
       path: '/profile/edit',
       name: 'edit-profile',
-      component: EditProfilePage
+      component: EditProfilePage,
+      meta: { requiresAuth: true }
     },
     {
       path: '/code',
       name: 'code',
       component: CodePage
     }
-  ]
+  ],
+  scrollBehavior() {
+    return { top: 0 }
+  }
 })
 
 export default router

@@ -1,141 +1,268 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useUserStore } from '@/composables/useUserStore.js'
 
 const props = defineProps({
   isOpen: Boolean,
   initialTab: {
     type: String,
-    default: 'login' // 'login' or 'signup'
+    default: 'login'
   }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'auth-success'])
+
+const { login, signup } = useUserStore()
 
 const activeTab = ref(props.initialTab)
+const loginEmail = ref('')
+const loginPassword = ref('')
+const signupName = ref('')
+const signupEmail = ref('')
+const signupPassword = ref('')
+const showLoginPass = ref(false)
+const showSignupPass = ref(false)
+const errorMsg = ref('')
+const successMsg = ref('')
+const isSubmitting = ref(false)
+
+watch(() => props.initialTab, (val) => {
+  activeTab.value = val
+})
+
+watch(() => props.isOpen, (val) => {
+  if (val) {
+    errorMsg.value = ''
+    successMsg.value = ''
+  }
+})
 
 const setTab = (tab) => {
-    activeTab.value = tab
+  activeTab.value = tab
+  errorMsg.value = ''
+  successMsg.value = ''
 }
 
 const closeModal = () => {
-    emit('close')
+  emit('close')
+}
+
+const handleLogin = () => {
+  errorMsg.value = ''
+  successMsg.value = ''
+
+  if (!loginEmail.value.trim() || !loginPassword.value.trim()) {
+    errorMsg.value = 'Please fill in all fields.'
+    return
+  }
+
+  isSubmitting.value = true
+  setTimeout(() => {
+    const result = login(loginEmail.value, loginPassword.value)
+    isSubmitting.value = false
+
+    if (result.success) {
+      successMsg.value = result.message
+      emit('auth-success', 'login')
+      setTimeout(() => closeModal(), 800)
+    } else {
+      errorMsg.value = result.message
+    }
+  }, 500)
+}
+
+const handleSignup = () => {
+  errorMsg.value = ''
+  successMsg.value = ''
+
+  if (!signupEmail.value.trim() || !signupPassword.value.trim()) {
+    errorMsg.value = 'Please fill in all fields.'
+    return
+  }
+  if (signupPassword.value.length < 6) {
+    errorMsg.value = 'Password must be at least 6 characters.'
+    return
+  }
+
+  isSubmitting.value = true
+  setTimeout(() => {
+    const result = signup(signupEmail.value, signupPassword.value, signupName.value)
+    isSubmitting.value = false
+
+    if (result.success) {
+      successMsg.value = result.message
+      emit('auth-success', 'signup')
+      setTimeout(() => closeModal(), 800)
+    } else {
+      errorMsg.value = result.message
+    }
+  }, 500)
 }
 </script>
 
 <template>
-  <div v-if="isOpen" class="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm flex items-center justify-center p-4">
-    <!-- Click away to close -->
-    <div class="absolute inset-0" @click="closeModal"></div>
+  <Transition name="modal-fade">
+    <div v-if="isOpen" class="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="absolute inset-0" @click="closeModal"></div>
 
-    <!-- Auth Card -->
-    <div class="relative w-full max-w-[480px] bg-white dark:bg-slate-900 brutalist-border shadow-neubrutalism overflow-hidden z-10 font-display">
-      
-      <!-- Close Button -->
-      <button @click="closeModal" class="absolute top-4 right-4 text-black dark:text-white hover:text-primary transition-colors z-20">
-        <span class="material-symbols-outlined font-black">close</span>
-      </button>
+      <Transition name="modal-scale">
+        <div class="relative w-full max-w-[480px] bg-white dark:bg-slate-900 border-4 border-black shadow-brutal-lg overflow-hidden z-10 font-display">
 
-      <!-- Header/Logo -->
-      <div class="pt-10 pb-6 flex flex-col items-center">
-        <img alt="Devora Logo" class="h-10 mb-2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAAAxCAYAAABDPJJ4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAykSURBVHhe7Zp5eBXlvcc/c7acrCcJJAGSECAQhBIRigXRAiKKSQSBG5FiBYqotdeLXheolqKAKIKCCNLeukFbXFAsLkBEQJClxcsOARIQyE5YbhZCzj5z/4Cc5J1z4lnCc5972vk8z/DM+/29LzOZ+c5vfu97RnLYZAUNjTBDpxY0NMIBzbgaYYlmXI2wRDOuRliiGVcjLNGMqxGWaMbVCEs042qEJZpxNcISzbgaYYlmXI2wRDOuRliiGVcjLNGMqxGWSNfrs0aXAzauqqVov436S25iE/Rk9Iogb6qF6Djfz4ciQ2mxnR8O22moU9AbIC5R4oYBUSSlGtTdPdgaZc6XObFdUZBlMEVIWNrrSOxgRJLUvf91qa2t4/DhQs6cLePG7F5kZ/fGYGj9uoYTbTZudamTj5fUcPaYHUVWR0HSQXqWifzpCaT3MAEgywoHt1spOeHAYfN9+KhYiV43m8m8MQJJklAUhfpLMtVlzlbH6HQQm6inUzcjen3bHfzBh5/y/O9eUssAREVFEhMTQ8cOyeT/22gefPB+T6y+vp4bbxoi9P8xevbsQWlpGVarzaPFxsaw9/utRERcvWYtGZc/mf37Dwnals3ryOzWBZvNzrz5r7F9+y4qK6uQW9xeo9FI164ZTHvol4y/b4wwfvGSt3hz2duC1pLISDPx8Rb69u3DawvnEhMTre4CwKh7J3LkyDG1zPDbh/Deu2+q5ZDxnQoDZP/WRpY+Uc2Zo75NS1NWPeFgxbPn2bHuMrZGmW9W13PyoL1VAwI0XlbYt9XK3zdcwWGVqTrrpOxk60YHkGWou+jm1EE7tiutnNB1orHRyvnzFzh0uJDfv/AKuXn3U1JSpu4WEPHxcaSldhS0xkYr9fX1ggagKAqnTp0WtLS0TnTJSKeisor88VNYvfoTyssrBdMCOJ1OiotPMfO3c3h2xmwh5g+r1UZVVTUFBVsYmZNPXZ33uQGtXoMdO3Zz7tx5tRwyIRlXUeDUYTsfvf4/WBtaN1JLbFcU1v2xlo9er6HmQuCmKi1ysvnjei5VudWhVnE6FM4cs+OwBX6ctnLseBEj7hpHWVmFOuQXvV7P5MkTBc3tdrN9+y5BA9i5aw/19ZcF7dFHJuN0Onnu+XkcPXpciPlCURQ++fQLlr/1Dm534Ne1iYqKKkbfOxGXyyXo+/Yd9Dq3JpwuF19+WaCWQyYk4zpsMqvmXcTpCMy0XLtYbpfCoe8acdoDN5TLIVNW5KLqjEMd+lHcLqg87UQJ/BT9Eh9vYfasZ/nd808xbuwokpPbCzW10+nkt8/PRfFx0P94/BE+W7vK5/bi7Jk8MDGfqKhIYczb7/xZ+L8URWHlqg+EPnq9nrtHjmD+y4v57rvdQiwhwcK4sffwzNOPc/uw2zCZxLJj8ZIVFBefErQmUlM78dnaVXz0wTu8PH8WiYkJQryktJyKiipPW1EU5s5bJPTpnJ4qtDdv3S6020JIxl33X3U01AZuPg/X7nLJicBNaLty9caVFzvVIb801MnUXRSzQluIiYlm6tQHeHjaJBa/Po/dOwuYPOkXQp9du/ZQeKxI0AAyMtLo36+vzy0rKxNJkujdq6cwpqj4B6qqznnaLpeLAweOCH0izWYSEixsV5k2OjqKbVu/ZPHrL/H4v0/jvXeXUbBhjTA5k2WZ5W+9J4xrwmyOoH+/vgwaNICJv8jnnT8tVXehqqras19TW8ehw4VC/IUXZgrtAweOeGXpUAnauI0NMv9Y36CWA6IpOV2qdOEIIOu6nVezNIDTQUgmrL0Y/KswUAwGA08/9RsMBr2gf/vtDqEdKLk5d6oliop/8OzbbHavunfy5AmUlJRTVlYu6H9csRiLJc7TliSJbt26cNedw4R+Gwu+oba2TtB80b17V7VEXYtzKTlbKsRSkpPod1O2oDkcDt57f7WghUrQxq27EKIRVJN862X/xr1aozYPrDwdvHHtjf6P0xZiY2MZPHigoLXMRE28smAJQ4bmeW33jG7O2GPH5hERESGM27Rpq2f/q/WbcLmar7/RaOThaZMoKjoplEQGg55evXo0Cy0YOHCA0JZlmZqaWkHzxcJFy9QS6elpnv1Vf/5IiGVldSc+3kL79u0E/dO1XwjtUAnauLZQjaCIznUGUC24VT69XBP8Q+MKvsIImg4pSUL7woVLQhvg0qUaSssqvLaWdWJCQjyDBv5UGFfw9VacTheKovD+SjFbpaV1Ij7ewukzYrbT6XStrtcmJ4vnClDnY0JVXl5BTu595OTeR7/+Q/nr6jVCXKfTef7umppaPv9CnHhlZ/dCp9MxqcUyIUB5eWVIE0I1QRtXvcQSKr4mMGrUPUIpjwI4TJtxOsUTk3ShryHfqXqV19TUcrTwODU1tRS3KBsAfnZzfwAiI8Us7XXhWtAyYzdh0HvbwG53cPzESY6fOEmNqpTQ6XQsXDDHM2Hbs2cfimo99JZBNwPw8LRJSC1msI2N1uuSdb3P2A+miKCHXEUSr6bB6P/m6sXSkahY/2PU6H0nnuvK6TMlQls9AwcYPnwIj/16qtc2RbUMdsdw7x8u9u49wLlq7zXQh6b+EoCsHt0E3eV2Y7f7fqWVlojZGcASb1FLrRIVFcnyZQvIzx/l0TZv8V4t2H/gCH/4w/usXPkhZrNZiL0451VkOcQ39zWCdmFcO5WbAkWVBSKj/R/aaBKN2qmL969I/oiI9H+ctlBeXsFh1Wy6S0a60AbIzRnBzBnTvbYnpj8i9OvYsQODb/mZoB04eITCwhOCdsMNPcjKygQgO7sPhhZPuSzL/OWv4qu9iU2btwntiAgTSao6FCAmJoZR99xNz55irRwXF8sdw4d62i6Xy6dxl7yxglcXLeXVRUuxWq1CzGq1UV19QdCCJei7GpugI62HUS0HQLMJzTE6IqL8H9oQoUO61k2nh6T04NNntMX/cUJBURT27j3IMzNeFMoeSZLIuXuE0DdY7h8/VmgfOnSUbdt2Ctrtw37u2Y+Pj6NHVnchvvyttyko2OI5N5fLxZx5izh06KjQb9pDD3plRICUlCSWvbmAN994WdDPnTvPKwual8a2bdsZ0KqEmj179qqloAjpW4Xa8y7mT6kKbuKjXPtHkuhzayQxlsAyt7XBjb0RElJ09B4oLtD7w2CErP6R6EL0rvpbBaPRSPfMLsiywtmSMux2u9Af4FdTHuA/n3zU61uFu0feQe+fiOu0TXTP7EZuTrPZy8oq+PnQPKGPyWTC4Wh+/X+yZiU3D7jJ01656kPmzF3oNXfIysoko3M6h48UemU5k8nEt1s/J7VTR69vFTIzu7Llm7+hKAq/fuwpvt70rScWFxfL7p0biYmJ4Yknn+PzLzZ6YgBdMjqjV9XNpWUVOJ3NhumZ1Z0N69d49QuUkIyrKApr3qjhHxuuqEM/ioJCuxQDPfpHBvwVl6IoOG0KfYdEoQvM6x7Ss4xY2gWfpZtQG9cfXbt2ZuP6NTgcDi/j/hi5uXeyYrn4q1PeqAle5UET7dolsvf7LcKkB+DpZ2ax9rOvBK01dDodSxa/xL2jc8HHRzZNxm2iz4230tDQfL8H/LQfaz5+lyHD7qG8vNKjm81mCo/sQq+aoIy/fyrf//d+Qdvw1cf07u37YfZHSHaXJInxTySQfVtwGTCjp4lHFyQFlQENRonRj1gwBlnepmYaiUsM0ultID//Xr75+jOfr91QeGH2DLXk4YGJ+V6mBXh5/mzy8kaqZS8kSeL3s57xmDYQxowR3wB79x3gb+vWC6YFmDBhnJdpAQYPFut2gO92/F0tBUwQFhKRdBJTZrVj/JMJmMzeF7ElRhOMeSye6W+kkJxmZMSEWBKSvf84NZ17GsmZbMHS3kBWfzOJHfyPMUZIdO1tIj5J7/PmXg8kSSI1tSO33TqIGc9Op2DDJ7y2cE6ra6ehkN2nN9HRUWoZgGFDb1VLcG2itXTJfD784G1Gj8rBaBTnIhZLLL957CE2FazlV1PE1Qx/PDfzSZKSxEncnLkLhTbAmNE5agmAkXcNV0sUFGxWSwETUqmg5nKtm91fXuHYHisXK13YGmVMZonEFAM/GRTJLXnRJCSLN1WWFcqKnZQVO7h0zoXDqiDpwBwlkZRmpEsvE8npBi/zXbnspu6Cm4Y6GZdDQVauLpuZo3VY2umJT9Kja8M66j8TVquNqnPV1NbW0SEliQ4dUtAF87r7f8x1Ma6Gxv81/xyPn8a/HJpxNcISzbgaYYlmXI2wRDOuRliiGVcjLNGMqxGWaMbVCEs042qEJZpxNcISzbgaYYlmXI2wRDOuRliiGVcjLNGMqxGW/C/Nba3LI3I0BQAAAABJRU5ErkJggg=="/>
-        <p class="text-black dark:text-slate-400 text-sm font-bold uppercase tracking-tight">Build the future of development</p>
-      </div>
-
-      <!-- Tab Switcher -->
-      <div class="px-8">
-        <div class="flex brutalist-border-sm bg-black">
-          <button 
-            @click="setTab('login')"
-            class="flex-1 py-4 text-sm font-black transition-colors uppercase tracking-widest border-r-2 border-black"
-            :class="activeTab === 'login' ? 'bg-primary text-white' : 'bg-white text-black hover:bg-slate-100'"
-          >
-            Log In
+          <button @click="closeModal" class="absolute top-4 right-4 text-black dark:text-white hover:text-primary transition-colors z-20">
+            <span class="material-symbols-outlined font-black">close</span>
           </button>
-          <button 
-            @click="setTab('signup')"
-            class="flex-1 py-4 text-sm font-black transition-colors uppercase tracking-widest"
-            :class="activeTab === 'signup' ? 'bg-primary text-white' : 'bg-white text-black hover:bg-slate-100'"
-          >
-            Sign Up
-          </button>
-        </div>
-      </div>
 
-      <!-- Login Form -->
-      <div v-if="activeTab === 'login'" class="p-8 space-y-6">
-        <div class="space-y-2">
-          <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Email Address</label>
-          <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">mail</span>
-            <input class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 brutalist-border-sm focus:ring-0 focus:translate-x-1 focus:translate-y-1 transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="name@company.com" type="email"/>
+          <div class="pt-10 pb-6 flex flex-col items-center">
+            <div class="flex items-center gap-1 mb-4">
+              <span class="w-6 h-6 rounded-full bg-primary inline-block"></span>
+              <span class="w-6 h-6 rounded-full bg-primary-dark inline-block -ml-2 opacity-80"></span>
+              <span class="w-6 h-6 rounded-full bg-devora-tan inline-block -ml-2 opacity-70"></span>
+            </div>
+            <h2 class="text-2xl font-black uppercase tracking-tight text-black dark:text-white">DEVORA</h2>
+            <p class="text-black dark:text-slate-400 text-sm font-bold uppercase tracking-tight mt-1">Build the future of development</p>
           </div>
-        </div>
 
-        <div class="space-y-2">
-          <div class="flex justify-between items-center">
-            <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Password</label>
-            <a class="text-xs font-black text-primary hover:underline uppercase" href="#">Forgot?</a>
+          <div class="px-8">
+            <div class="flex border-4 border-black bg-black">
+              <button
+                @click="setTab('login')"
+                class="flex-1 py-4 text-sm font-black transition-colors uppercase tracking-widest border-r-2 border-black"
+                :class="activeTab === 'login' ? 'bg-primary text-white' : 'bg-white text-black hover:bg-slate-100'"
+              >
+                Log In
+              </button>
+              <button
+                @click="setTab('signup')"
+                class="flex-1 py-4 text-sm font-black transition-colors uppercase tracking-widest"
+                :class="activeTab === 'signup' ? 'bg-primary text-white' : 'bg-white text-black hover:bg-slate-100'"
+              >
+                Sign Up
+              </button>
+            </div>
           </div>
-          <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">lock</span>
-            <input class="w-full pl-10 pr-10 py-3 bg-white dark:bg-slate-800 brutalist-border-sm focus:ring-0 focus:translate-x-1 focus:translate-y-1 transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="••••••••" type="password"/>
-            <button class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-black text-xl hover:text-primary transition-colors">visibility</button>
-          </div>
-        </div>
 
-        <button class="w-full py-5 bg-primary text-white font-black uppercase tracking-widest brutalist-border-sm shadow-neubrutalism-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all active:scale-[0.98]">
-          Log In to Account
-        </button>
-
-        <div class="relative py-2">
-          <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t-2 border-black dark:border-slate-800"></div>
+          <!-- Feedback Messages -->
+          <div v-if="errorMsg" class="mx-8 mt-6 p-3 border-2 border-red-500 bg-red-100 text-red-700 text-sm font-black uppercase tracking-tight flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">error</span>
+            {{ errorMsg }}
           </div>
-          <div class="relative flex justify-center text-xs uppercase">
-            <span class="bg-white dark:bg-slate-900 px-4 text-black font-black">Or continue with</span>
+          <div v-if="successMsg" class="mx-8 mt-6 p-3 border-2 border-green-600 bg-green-100 text-green-700 text-sm font-black uppercase tracking-tight flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">check_circle</span>
+            {{ successMsg }}
           </div>
-        </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <button class="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-slate-800 brutalist-border-sm shadow-neubrutalism-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
-            <span class="text-xs font-black text-black dark:text-slate-200 uppercase">Google</span>
-          </button>
-          <button class="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-slate-800 brutalist-border-sm shadow-neubrutalism-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
-            <span class="text-xs font-black text-black dark:text-slate-200 uppercase">GitHub</span>
-          </button>
-        </div>
-      </div>
-      
-      <!-- Signup Form (Same layout conceptually) -->
-      <div v-if="activeTab === 'signup'" class="p-8 space-y-6">
-        <div class="space-y-2">
-          <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Email Address</label>
-          <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">mail</span>
-            <input class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 brutalist-border-sm focus:ring-0 focus:translate-x-1 focus:translate-y-1 transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="new.user@company.com" type="email"/>
+          <!-- Login Form -->
+          <div v-if="activeTab === 'login'" class="p-8 space-y-6">
+            <form @submit.prevent="handleLogin" class="space-y-6">
+              <div class="space-y-2">
+                <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Email Address</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">mail</span>
+                  <input v-model="loginEmail" class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border-4 border-black focus:ring-2 focus:ring-primary focus:outline-none transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="name@company.com" type="email"/>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Password</label>
+                </div>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">lock</span>
+                  <input v-model="loginPassword" class="w-full pl-10 pr-10 py-3 bg-white dark:bg-slate-800 border-4 border-black focus:ring-2 focus:ring-primary focus:outline-none transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="Enter your password" :type="showLoginPass ? 'text' : 'password'"/>
+                  <button type="button" @click="showLoginPass = !showLoginPass" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-black text-xl hover:text-primary transition-colors">
+                    {{ showLoginPass ? 'visibility_off' : 'visibility' }}
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" :disabled="isSubmitting" class="w-full py-5 bg-primary text-white font-black uppercase tracking-widest border-4 border-black shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2">
+                <span v-if="isSubmitting" class="material-symbols-outlined animate-spin text-lg">refresh</span>
+                {{ isSubmitting ? 'Logging in...' : 'Log In to Account' }}
+              </button>
+            </form>
+
+            <div class="relative py-2">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t-2 border-black dark:border-slate-800"></div>
+              </div>
+              <div class="relative flex justify-center text-xs uppercase">
+                <span class="bg-white dark:bg-slate-900 px-4 text-black font-black">Or continue with</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <button class="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-slate-800 border-4 border-black shadow-brutal-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
+                <span class="text-xs font-black text-black dark:text-slate-200 uppercase">Google</span>
+              </button>
+              <button class="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-slate-800 border-4 border-black shadow-brutal-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
+                <span class="text-xs font-black text-black dark:text-slate-200 uppercase">GitHub</span>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="space-y-2">
-          <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Choose a Password</label>
-          <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">lock</span>
-            <input class="w-full pl-10 pr-10 py-3 bg-white dark:bg-slate-800 brutalist-border-sm focus:ring-0 focus:translate-x-1 focus:translate-y-1 transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="••••••••" type="password"/>
+
+          <!-- Signup Form -->
+          <div v-if="activeTab === 'signup'" class="p-8 space-y-6">
+            <form @submit.prevent="handleSignup" class="space-y-6">
+              <div class="space-y-2">
+                <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Full Name</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">person</span>
+                  <input v-model="signupName" class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border-4 border-black focus:ring-2 focus:ring-primary focus:outline-none transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="Your full name" type="text"/>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Email Address</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">mail</span>
+                  <input v-model="signupEmail" class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border-4 border-black focus:ring-2 focus:ring-primary focus:outline-none transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="new.user@company.com" type="email"/>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-black text-black dark:text-slate-300 uppercase tracking-wider">Choose a Password</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-black text-xl font-bold">lock</span>
+                  <input v-model="signupPassword" class="w-full pl-10 pr-10 py-3 bg-white dark:bg-slate-800 border-4 border-black focus:ring-2 focus:ring-primary focus:outline-none transition-all text-black dark:text-slate-100 placeholder:text-slate-400 font-bold" placeholder="Min. 6 characters" :type="showSignupPass ? 'text' : 'password'"/>
+                  <button type="button" @click="showSignupPass = !showSignupPass" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-black text-xl hover:text-primary transition-colors">
+                    {{ showSignupPass ? 'visibility_off' : 'visibility' }}
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" :disabled="isSubmitting" class="w-full py-5 bg-primary text-white font-black uppercase tracking-widest border-4 border-black shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2">
+                <span v-if="isSubmitting" class="material-symbols-outlined animate-spin text-lg">refresh</span>
+                {{ isSubmitting ? 'Creating Account...' : 'Create Account' }}
+              </button>
+            </form>
           </div>
+
+          <div class="bg-black/5 dark:bg-slate-800/50 p-6 text-center border-t-2 border-black">
+            <p class="text-[10px] text-black dark:text-slate-400 leading-relaxed font-bold uppercase tracking-tight">
+              By continuing, you agree to Devora's
+              <a class="underline decoration-2 hover:text-primary transition-colors" href="#">Terms of Service</a> and
+              <a class="underline decoration-2 hover:text-primary transition-colors" href="#">Privacy Policy</a>.
+            </p>
+          </div>
+
         </div>
-        <button class="w-full py-5 bg-devora-purple text-white font-black uppercase tracking-widest brutalist-border-sm shadow-neubrutalism-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all active:scale-[0.98]">
-          Create Account
-        </button>
-      </div>
-
-      <!-- Footer Note -->
-      <div class="bg-black/5 dark:bg-slate-800/50 p-6 text-center border-t-2 border-black">
-        <p class="text-[10px] text-black dark:text-slate-400 leading-relaxed font-bold uppercase tracking-tight">
-          By continuing, you agree to Devora's 
-          <a class="underline decoration-2 hover:text-primary transition-colors" href="#">Terms of Service</a> and 
-          <a class="underline decoration-2 hover:text-primary transition-colors" href="#">Privacy Policy</a>.
-        </p>
-      </div>
-
+      </Transition>
     </div>
-  </div>
+  </Transition>
 </template>
+
+<style scoped>
+.shadow-brutal { box-shadow: 4px 4px 0px 0px rgba(0,0,0,1); }
+.shadow-brutal-lg { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
+.shadow-brutal-sm { box-shadow: 2px 2px 0px 0px rgba(0,0,0,1); }
+
+.modal-fade-enter-active { transition: opacity 0.25s ease; }
+.modal-fade-leave-active { transition: opacity 0.2s ease; }
+.modal-fade-enter-from,
+.modal-fade-leave-to { opacity: 0; }
+
+.modal-scale-enter-active { transition: all 0.25s ease-out; }
+.modal-scale-leave-active { transition: all 0.15s ease-in; }
+.modal-scale-enter-from { transform: scale(0.95); opacity: 0; }
+.modal-scale-leave-to { transform: scale(0.95); opacity: 0; }
+</style>
