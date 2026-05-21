@@ -4,8 +4,8 @@ import { RouterLink } from 'vue-router'
 
 <template>
   <footer class="bg-[#1a1a2e] text-white relative z-10">
-    <div class="max-w-7xl mx-auto px-6 py-16">
-      <div class="grid md:grid-cols-4 gap-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+      <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
         <!-- Brand Column -->
         <div class="md:col-span-2">
           <RouterLink to="/" class="flex items-center gap-3 mb-6">
@@ -51,7 +51,7 @@ import { RouterLink } from 'vue-router'
       </div>
 
       <!-- Bottom Bar -->
-      <div class="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+      <div class="border-t border-white/10 mt-8 sm:mt-12 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
         <div>
           <p class="text-white/60 text-sm font-bold uppercase tracking-widest text-primary mb-1">made with love ❤️</p>
           <p class="text-white/40 text-xs font-medium">© 2026 Devora. All rights reserved.</p>

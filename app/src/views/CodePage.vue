@@ -36,23 +36,23 @@ const selectExample = (text) => {
 <template>
   <div class="bg-devora-cream text-slate-900 font-display min-h-screen">
     <!-- Main Content Container -->
-    <main class="max-w-[1400px] mx-auto px-6 py-32">
+    <main class="max-w-[1400px] mx-auto px-3 sm:px-6 py-20 sm:py-32">
       
       <!-- Split Layout: Header Left, Input Right -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16">
         
         <!-- Left Column: Header & Features -->
         <div class="lg:col-span-4">
           <header class="sticky top-32">
-            <h1 class="text-7xl font-black text-devora-purple mb-6 uppercase italic tracking-tighter leading-[0.85]">
+            <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black text-devora-purple mb-4 sm:mb-6 uppercase italic tracking-tighter leading-[0.85]">
               Forge<br/>Code
             </h1>
-            <p class="text-slate-600 text-lg font-medium mb-8 leading-relaxed">
+            <p class="text-slate-600 text-base sm:text-lg font-medium mb-6 sm:mb-8 leading-relaxed">
               Harness the power of DEVORA's neural engine to generate optimized, production-ready code from natural language prompts.
             </p>
             
             <!-- Quick Stats -->
-            <div class="flex gap-4 mb-8">
+            <div class="flex gap-3 sm:gap-4 mb-6 sm:mb-8">
               <div class="bg-white border-3 border-black px-4 py-3 shadow-brutal">
                 <div class="text-2xl font-black text-devora-purple">15+</div>
                 <div class="text-[10px] font-black uppercase tracking-widest text-slate-500">Languages</div>
@@ -68,7 +68,7 @@ const selectExample = (text) => {
             </div>
 
             <!-- Feature Cards -->
-            <div class="space-y-4 mb-8">
+            <div class="space-y-3 sm:space-y-4 mb-6 sm:mb-8 hidden sm:block">
               <div class="bg-white border-3 border-black p-5 shadow-brutal hover:translate-x-1 transition-transform cursor-pointer">
                 <div class="flex items-center gap-3 mb-2">
                   <span class="w-10 h-10 bg-primary flex items-center justify-center">
@@ -117,10 +117,10 @@ const selectExample = (text) => {
         <!-- Right Column: Input & Output -->
         <div class="lg:col-span-8">
           <!-- Input Card -->
-          <section class="bg-white brutal-border shadow-brutal-lg p-8 mb-8">
+          <section class="bg-white brutal-border shadow-brutal-lg p-4 sm:p-8 mb-6 sm:mb-8">
             <div class="flex flex-col gap-6">
               <!-- Language Selector -->
-              <div class="flex items-center justify-between">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <span class="text-xs font-black text-black uppercase tracking-widest">Select Language:</span>
                 <select v-model="language" class="flex items-center gap-2 px-6 py-2 bg-devora-accent text-devora-purple brutal-border-thin font-black text-sm appearance-none outline-none focus:ring-2 focus:ring-primary">
                   <option value="auto">Auto (Let AI decide)</option>
@@ -144,9 +144,9 @@ const selectExample = (text) => {
               </div>
               
               <!-- Action Button -->
-              <div class="flex justify-end items-center gap-4">
-                <span v-if="error" class="text-red-600 font-bold bg-red-100 border-2 border-red-600 px-4 py-2">{{ error }}</span>
-                <button @click="handleGenerate" :disabled="loading" class="flex items-center gap-2 bg-primary text-white px-10 py-4 brutal-border shadow-brutal font-black text-lg uppercase tracking-tight hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 sm:gap-4">
+                <span v-if="error" class="text-red-600 font-bold bg-red-100 border-2 border-red-600 px-3 sm:px-4 py-2 text-sm">{{ error }}</span>
+                <button @click="handleGenerate" :disabled="loading" class="flex items-center justify-center gap-2 bg-primary text-white px-6 sm:px-10 py-3 sm:py-4 brutal-border shadow-brutal font-black text-base sm:text-lg uppercase tracking-tight hover:-translate-x-1 hover:-translate-y-1 active:translate-x-0 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                   <span v-if="loading" class="material-symbols-outlined animate-spin">refresh</span>
                   <span v-else class="material-symbols-outlined">auto_awesome</span>
                   {{ loading ? 'Generating...' : 'Generate Code' }}

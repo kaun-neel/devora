@@ -100,32 +100,33 @@ const runCode = async () => {
   <div class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
     <!-- Navigation Replacement (We use the global NavBar) -->
 
-    <main class="max-w-[1440px] mx-auto px-6 py-24 space-y-10">
+    <main class="max-w-[1440px] mx-auto px-3 sm:px-6 py-20 sm:py-24 space-y-6 sm:space-y-10">
       <!-- Header Section -->
       <div class="flex flex-col gap-2">
-        <h1 class="text-6xl font-black tracking-tighter text-black dark:text-white uppercase italic">Debugger</h1>
-        <p class="text-black dark:text-slate-400 max-w-2xl font-bold bg-white dark:bg-slate-800 brutal-border p-4 brutal-shadow inline-block">Identify and resolve code issues with AI-powered diagnosis. Upload your snippet or connect your repository to start the analysis.</p>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-black dark:text-white uppercase italic">Debugger</h1>
+        <p class="text-black dark:text-slate-400 max-w-2xl font-bold bg-white dark:bg-slate-800 brutal-border p-3 sm:p-4 brutal-shadow inline-block text-sm sm:text-base">Identify and resolve code issues with AI-powered diagnosis.</p>
       </div>
 
       <!-- Debugger Interface -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-start">
         
         <!-- Left Panel: Editor -->
-        <div class="bg-white dark:bg-slate-900 brutal-border-thick brutal-shadow-lg overflow-hidden flex flex-col h-[700px]">
-          <div class="p-4 border-b-2 border-black flex justify-between items-center bg-primary/10 dark:bg-slate-800">
+        <div class="bg-white dark:bg-slate-900 brutal-border-thick brutal-shadow-lg overflow-hidden flex flex-col h-[400px] sm:h-[500px] lg:h-[700px]">
+          <div class="p-3 sm:p-4 border-b-2 border-black flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-primary/10 dark:bg-slate-800">
             <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined font-black">code</span>
-              <h3 class="font-black uppercase tracking-tight">Your Code</h3>
-              <span class="text-xs font-black px-2 py-0.5 border-2 border-black bg-white dark:bg-slate-700">source_code</span>
+              <span class="material-symbols-outlined font-black text-sm sm:text-base">code</span>
+              <h3 class="font-black uppercase tracking-tight text-sm sm:text-base">Your Code</h3>
+              <span class="text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-0.5 border-2 border-black bg-white dark:bg-slate-700 hidden sm:inline">source_code</span>
             </div>
-            <div class="flex items-center gap-4">
-              <span v-if="error" class="text-red-500 font-bold text-sm bg-red-100 px-2 py-1 border border-red-500">{{ error }}</span>
-              <button @click="runCode" :disabled="isExecuting" class="bg-black text-emerald-400 border-2 border-black px-4 py-2 font-black brutal-shadow transition-transform active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center gap-2 disabled:opacity-50 hover:bg-zinc-900">
+            <div class="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              <span v-if="error" class="text-red-500 font-bold text-xs sm:text-sm bg-red-100 px-2 py-1 border border-red-500 truncate max-w-[120px] sm:max-w-none">{{ error }}</span>
+              <button @click="runCode" :disabled="isExecuting" class="bg-black text-emerald-400 border-2 border-black px-2 sm:px-4 py-1.5 sm:py-2 font-black brutal-shadow transition-transform active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center gap-1 sm:gap-2 disabled:opacity-50 hover:bg-zinc-900 text-xs sm:text-sm">
                 <span v-if="isExecuting" class="material-symbols-outlined text-sm font-black animate-spin">sync</span>
                 <span v-else class="material-symbols-outlined text-sm font-black">play_arrow</span>
-                RUN CODE
+                <span class="hidden sm:inline">RUN CODE</span>
+                <span class="sm:hidden">RUN</span>
               </button>
-              <button @click="handleDebug" :disabled="loading" class="bg-primary border-2 border-black text-white px-6 py-2 font-black brutal-shadow transition-transform active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+              <button @click="handleDebug" :disabled="loading" class="bg-primary border-2 border-black text-white px-2 sm:px-6 py-1.5 sm:py-2 font-black brutal-shadow transition-transform active:translate-x-0.5 active:translate-y-0.5 active:shadow-none flex items-center gap-1 sm:gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm">
                 <span v-if="loading" class="material-symbols-outlined text-sm font-black animate-spin">refresh</span>
                 <span v-else class="material-symbols-outlined text-sm font-black">bolt</span>
                 {{ loading ? 'ANALYSING...' : 'ANALYSE & FIX' }}
@@ -158,7 +159,7 @@ const runCode = async () => {
         </div>
 
         <!-- Right Panel: Diagnosis -->
-        <div class="bg-white dark:bg-slate-900 brutal-border-thick brutal-shadow-lg overflow-hidden flex flex-col h-[700px]">
+        <div class="bg-white dark:bg-slate-900 brutal-border-thick brutal-shadow-lg overflow-hidden flex flex-col h-[400px] sm:h-[500px] lg:h-[700px]">
           <div class="p-4 border-b-2 border-black flex justify-between items-center bg-yellow-400 dark:bg-slate-800">
             <div class="flex items-center gap-2 text-black dark:text-white">
               <span class="material-symbols-outlined font-black">analytics</span>
@@ -229,22 +230,22 @@ const runCode = async () => {
       </div>
 
       <!-- Bottom Status Bar -->
-      <div class="flex flex-col md:flex-row items-center gap-4 bg-emerald-400 p-6 brutal-border-thick brutal-shadow text-black">
-        <div class="flex items-center gap-4">
-          <div class="size-12 bg-white border-2 border-black flex items-center justify-center text-black brutal-shadow-sm flex-shrink-0">
-            <span class="material-symbols-outlined font-black text-3xl">memory</span>
+      <div class="flex flex-col md:flex-row items-center gap-3 sm:gap-4 bg-emerald-400 p-3 sm:p-6 brutal-border-thick brutal-shadow text-black">
+        <div class="flex items-center gap-3 sm:gap-4 w-full md:w-auto">
+          <div class="size-10 sm:size-12 bg-white border-2 border-black flex items-center justify-center text-black brutal-shadow-sm flex-shrink-0">
+            <span class="material-symbols-outlined font-black text-xl sm:text-3xl">memory</span>
           </div>
-          <div>
-            <p class="text-lg font-black uppercase italic">AI Model: Devora Coder version 1.5</p>
-            <p class="text-sm font-bold text-black/70">
-              <span>Detected Language: <span class="bg-white px-1 uppercase border border-black">{{ realTimeLanguage }}</span></span>
+          <div class="min-w-0">
+            <p class="text-sm sm:text-lg font-black uppercase italic truncate">AI Model: Devora v1.5</p>
+            <p class="text-xs sm:text-sm font-bold text-black/70">
+              <span>Language: <span class="bg-white px-1 uppercase border border-black text-xs">{{ realTimeLanguage }}</span></span>
             </p>
           </div>
         </div>
         
-        <div class="md:ml-auto flex items-center gap-8 w-full md:w-auto">
+        <div class="md:ml-auto flex items-center gap-4 sm:gap-8 w-full md:w-auto">
           <div class="flex flex-col items-end w-full md:w-48">
-            <p class="text-xs font-black uppercase tracking-widest">Token Usage ({{ usageCount }}/10)</p>
+            <p class="text-[10px] sm:text-xs font-black uppercase tracking-widest">Token Usage ({{ usageCount }}/10)</p>
             <div class="w-full h-4 bg-white border-2 border-black mt-1 overflow-hidden">
               <div class="h-full bg-black transition-all duration-300" :style="`width: ${(usageCount / 10) * 100}%;`"></div>
             </div>

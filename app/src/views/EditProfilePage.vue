@@ -58,15 +58,15 @@ const userInitials = () => {
 </script>
 
 <template>
-  <div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-display pb-20 pt-32">
-    <main class="max-w-3xl mx-auto px-4">
+  <div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-display pb-20 pt-24 sm:pt-32">
+    <main class="max-w-3xl mx-auto px-3 sm:px-4">
 
       <!-- Header -->
-      <div class="flex items-center gap-4 mb-10">
-        <button @click="goBack" class="w-12 h-12 flex items-center justify-center bg-white dark:bg-slate-800 border-4 border-black dark:border-white shadow-brutal-sm hover:-translate-y-1 hover:-translate-x-1 transition-transform">
-          <span class="material-symbols-outlined font-black">arrow_back</span>
+      <div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
+        <button @click="goBack" class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white dark:bg-slate-800 border-3 sm:border-4 border-black dark:border-white shadow-brutal-sm hover:-translate-y-1 hover:-translate-x-1 transition-transform">
+          <span class="material-symbols-outlined font-black text-sm sm:text-base">arrow_back</span>
         </button>
-        <h1 class="text-4xl font-black uppercase tracking-tighter">Edit Profile</h1>
+        <h1 class="text-2xl sm:text-4xl font-black uppercase tracking-tighter">Edit Profile</h1>
       </div>
 
       <!-- Success Banner -->
@@ -78,13 +78,13 @@ const userInitials = () => {
       </Transition>
 
       <!-- Main Form Container -->
-      <div class="bg-white dark:bg-slate-900 border-4 border-black dark:border-white shadow-brutal-lg p-8 md:p-12 space-y-10">
+      <div class="bg-white dark:bg-slate-900 border-3 sm:border-4 border-black dark:border-white shadow-brutal-lg p-4 sm:p-8 md:p-12 space-y-6 sm:space-y-10">
 
         <!-- Avatar Section -->
-        <div class="flex flex-col sm:flex-row items-center gap-8 pb-10 border-b-4 border-black dark:border-white">
+        <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 pb-6 sm:pb-10 border-b-3 sm:border-b-4 border-black dark:border-white">
           <div class="relative">
-            <div class="w-32 h-32 border-4 border-black dark:border-white bg-primary/20 overflow-hidden shadow-brutal flex items-center justify-center">
-              <span class="text-4xl font-black text-primary">{{ userInitials() }}</span>
+            <div class="w-24 h-24 sm:w-32 sm:h-32 border-4 border-black dark:border-white bg-white dark:bg-slate-800 overflow-hidden shadow-brutal flex items-center justify-center">
+              <span class="text-3xl sm:text-4xl font-black text-primary">{{ userInitials() }}</span>
             </div>
           </div>
           <div class="flex flex-col gap-3 w-full sm:w-auto text-center sm:text-left">
@@ -119,8 +119,8 @@ const userInitials = () => {
             <p class="text-xs text-slate-400 font-bold">Email cannot be changed</p>
           </div>
 
-          <div class="pt-8 border-t-4 border-black dark:border-white space-y-8">
-            <h3 class="text-2xl font-black uppercase tracking-tighter">Social Links</h3>
+          <div class="pt-6 sm:pt-8 border-t-3 sm:border-t-4 border-black dark:border-white space-y-5 sm:space-y-8">
+            <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tighter">Social Links</h3>
 
             <div class="grid md:grid-cols-2 gap-8">
               <div class="space-y-2">
@@ -136,11 +136,11 @@ const userInitials = () => {
           </div>
 
           <!-- Actions -->
-          <div class="pt-10 flex flex-col sm:flex-row gap-4 justify-end">
-            <button type="button" @click="goBack" class="px-8 py-4 bg-white dark:bg-slate-800 text-black dark:text-white border-4 border-black dark:border-white font-black uppercase text-lg shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all order-2 sm:order-1">
+          <div class="pt-6 sm:pt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
+            <button type="button" @click="goBack" class="px-6 sm:px-8 py-3 sm:py-4 bg-white dark:bg-slate-800 text-black dark:text-white border-3 sm:border-4 border-black dark:border-white font-black uppercase text-base sm:text-lg shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all order-2 sm:order-1">
               Cancel
             </button>
-            <button type="submit" class="px-8 py-4 bg-primary text-white border-4 border-black dark:border-white font-black uppercase text-lg shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all order-1 sm:order-2">
+            <button type="submit" class="px-6 sm:px-8 py-3 sm:py-4 bg-primary text-white border-3 sm:border-4 border-black dark:border-white font-black uppercase text-base sm:text-lg shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all order-1 sm:order-2">
               Save Changes
             </button>
           </div>

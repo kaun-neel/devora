@@ -108,26 +108,25 @@ onUnmounted(() => {
       style="pointer-events: all;"
     ></div>
 
-    <!-- Hero Section — Split Layout: Text Left, Rubik's Cubes Right -->
+    <!-- Hero Section -->
     <section class="relative z-10 min-h-screen flex items-center pointer-events-none">
       <!-- Devora Logo Animation -->
-      <div class="logo-animation-container">
+      <div class="logo-animation-container hidden md:block">
         <DevoraLogoAnimation />
       </div>
 
-      <!-- Text content on the left — aligned to same left edge -->
-      <div class="max-w-7xl mx-auto px-6 w-full pt-28 pb-20">
-        <div class="flex flex-col space-y-8">
-          <p class="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-slate-500 pl-1">Hello, friends. Meet Devora.</p>
-          <h1 class="hero-text-container text-6xl md:text-8xl lg:text-9xl font-black leading-[0.85] uppercase italic">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full pt-24 sm:pt-28 pb-16 sm:pb-20">
+        <div class="flex flex-col space-y-5 sm:space-y-8">
+          <p class="text-xs sm:text-sm md:text-base font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-slate-500 pl-1">Hello, friends. Meet Devora.</p>
+          <h1 class="hero-text-container text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black leading-[0.85] uppercase italic">
             <span class="text-primary">Code it,</span><br/>
             <span class="text-primary-dark">Build it.</span>
           </h1>
-          <div class="flex flex-wrap gap-5 pointer-events-auto pt-2">
-            <RouterLink to="/code" class="bg-primary text-white font-black uppercase px-8 py-4 border-3 border-brutal-black neubrutal-shadow-lg active-neubrutal flex items-center gap-3 text-base hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all duration-150">
+          <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-5 pointer-events-auto pt-2">
+            <RouterLink to="/code" class="bg-primary text-white font-black uppercase px-6 sm:px-8 py-3 sm:py-4 border-3 border-brutal-black neubrutal-shadow-lg active-neubrutal flex items-center justify-center gap-3 text-sm sm:text-base hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all duration-150">
               Generate Code <span class="material-symbols-outlined text-base font-black">arrow_forward</span>
             </RouterLink>
-            <RouterLink to="/debugger" class="bg-white text-brutal-black font-black uppercase px-8 py-4 border-3 border-brutal-black neubrutal-shadow-lg active-neubrutal text-base hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all duration-150">
+            <RouterLink to="/debugger" class="bg-white text-brutal-black font-black uppercase px-6 sm:px-8 py-3 sm:py-4 border-3 border-brutal-black neubrutal-shadow-lg active-neubrutal text-sm sm:text-base text-center hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all duration-150">
               Debug My Code
             </RouterLink>
           </div>
@@ -136,14 +135,14 @@ onUnmounted(() => {
     </section>
 
     <!-- Section 2: What DEVORA Does -->
-    <section class="relative z-10 py-24 bg-white/80 backdrop-blur-sm pointer-events-auto">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-center gap-6 mb-16">
-          <h2 class="text-5xl font-black text-brutal-black uppercase italic">What DEVORA Does</h2>
-          <div class="h-3 grow bg-primary border-y-3 border-brutal-black"></div>
+    <section class="relative z-10 py-12 sm:py-24 bg-white/80 backdrop-blur-sm pointer-events-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex items-center gap-4 sm:gap-6 mb-8 sm:mb-16">
+          <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black text-brutal-black uppercase italic">What DEVORA Does</h2>
+          <div class="h-3 grow bg-primary border-y-3 border-brutal-black hidden sm:block"></div>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-12">
+        <div class="grid md:grid-cols-2 gap-6 sm:gap-12">
           <!-- Inquiry Card -->
           <div class="bg-background-light p-10 border-3 border-brutal-black neubrutal-shadow-lg">
             <div class="flex items-center justify-between mb-8">
@@ -264,7 +263,7 @@ onUnmounted(() => {
 
     <!-- Section 4: Stats Bar -->
     <section class="relative z-10 py-20 bg-[#FFF3CD]/80 backdrop-blur-sm border-b-3 border-brutal-black pointer-events-auto">
-      <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
         <div class="p-8 border-3 border-brutal-black bg-white neubrutal-shadow text-center">
           <div class="text-5xl font-black mb-2 italic">15+</div>
           <div class="text-primary font-black uppercase text-xs tracking-widest">Languages</div>
@@ -321,5 +320,11 @@ onUnmounted(() => {
   transform: translateY(-50%);
   z-index: 5;
   pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .logo-animation-container {
+    display: none;
+  }
 }
 </style>

@@ -37,88 +37,88 @@ if (!isLoggedIn.value) {
       </div>
     </div>
 
-    <main v-else class="max-w-[1000px] mx-auto px-4 py-24 space-y-10">
+    <main v-else class="max-w-[1000px] mx-auto px-3 sm:px-4 py-20 sm:py-24 space-y-6 sm:space-y-10">
 
       <!-- Profile Header -->
       <div class="bg-white dark:bg-slate-900 border-4 border-black dark:border-white shadow-brutal-lg overflow-hidden">
-        <div class="h-40 bg-gradient-to-r from-primary to-primary-dark border-b-4 border-black dark:border-white relative overflow-hidden">
-          <div class="absolute inset-0 opacity-20">
+        <div class="h-28 sm:h-40 bg-gradient-to-r from-primary to-primary-dark border-b-4 border-black dark:border-white relative overflow-hidden">
+          <div class="absolute inset-0 opacity-20 hidden sm:block">
             <div class="absolute top-4 left-8 w-24 h-24 border-4 border-white/30 rotate-12"></div>
             <div class="absolute bottom-2 right-16 w-16 h-16 border-4 border-white/20 -rotate-6"></div>
             <div class="absolute top-8 right-1/3 w-12 h-12 border-4 border-white/25 rotate-45"></div>
           </div>
         </div>
-        <div class="px-8 pb-10 flex flex-col items-center sm:items-start sm:flex-row gap-8 -mt-16">
-          <div class="relative">
-            <div class="w-40 h-40 border-4 border-black dark:border-white bg-primary/20 overflow-hidden shadow-brutal flex items-center justify-center">
-              <span class="text-5xl font-black text-primary">{{ userInitials }}</span>
+        <div class="px-4 sm:px-8 pb-6 sm:pb-10 flex flex-col items-center sm:items-start sm:flex-row gap-4 sm:gap-8 -mt-12 sm:-mt-16">
+          <div class="relative flex-shrink-0">
+            <div class="w-24 h-24 sm:w-40 sm:h-40 border-4 border-black dark:border-white bg-white dark:bg-slate-800 overflow-hidden shadow-brutal flex items-center justify-center ring-4 ring-white dark:ring-slate-800">
+              <span class="text-3xl sm:text-5xl font-black text-primary">{{ userInitials }}</span>
             </div>
-            <div class="absolute bottom-2 right-2 w-8 h-8 bg-green-500 border-4 border-black dark:border-white"></div>
+            <div class="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 w-5 h-5 sm:w-8 sm:h-8 bg-green-500 border-3 sm:border-4 border-black dark:border-white"></div>
           </div>
 
-          <div class="mt-20 flex-1 text-center sm:text-left">
-            <h1 class="text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">{{ currentUser.name || 'User' }}</h1>
-            <p class="text-slate-600 dark:text-slate-400 font-bold text-lg mt-1 uppercase tracking-tight">{{ currentUser.title || 'Developer' }} &bull; {{ memberSinceText }}</p>
-            <div class="mt-6 flex flex-wrap justify-center sm:justify-start gap-3">
+          <div class="mt-2 sm:mt-20 flex-1 text-center sm:text-left">
+            <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">{{ currentUser.name || 'User' }}</h1>
+            <p class="text-slate-600 dark:text-slate-400 font-bold text-sm sm:text-lg mt-1 uppercase tracking-tight">{{ currentUser.title || 'Developer' }} &bull; {{ memberSinceText }}</p>
+            <div class="mt-3 sm:mt-6 flex flex-wrap justify-center sm:justify-start gap-2 sm:gap-3">
               <template v-if="activity.badges && activity.badges.length > 0">
-                <span v-for="badge in activity.badges.slice(0, 2)" :key="badge.id" class="px-4 py-2 border-2 border-black dark:border-white bg-primary text-white text-xs font-black uppercase tracking-widest shadow-brutal-sm">
+                <span v-for="badge in activity.badges.slice(0, 2)" :key="badge.id" class="px-3 sm:px-4 py-1.5 sm:py-2 border-2 border-black dark:border-white bg-primary text-white text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-brutal-sm">
                   {{ badge.name }}
                 </span>
               </template>
-              <span v-else class="px-4 py-2 border-2 border-black dark:border-white bg-white dark:bg-slate-800 text-black dark:text-white text-xs font-black uppercase tracking-widest shadow-brutal-sm">
+              <span v-else class="px-3 sm:px-4 py-1.5 sm:py-2 border-2 border-black dark:border-white bg-white dark:bg-slate-800 text-black dark:text-white text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-brutal-sm">
                 New Member
               </span>
             </div>
           </div>
 
-          <div class="mt-20">
-            <RouterLink to="/profile/edit" class="inline-block px-8 py-3 bg-white dark:bg-slate-800 text-black dark:text-white border-4 border-black dark:border-white font-black uppercase tracking-widest hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all shadow-brutal">Edit Profile</RouterLink>
+          <div class="sm:mt-20">
+            <RouterLink to="/profile/edit" class="inline-block px-5 sm:px-8 py-2.5 sm:py-3 bg-white dark:bg-slate-800 text-black dark:text-white border-3 sm:border-4 border-black dark:border-white font-black uppercase tracking-widest text-xs sm:text-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all shadow-brutal">Edit Profile</RouterLink>
           </div>
         </div>
       </div>
 
       <!-- Stats Row -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="bg-white dark:bg-slate-900 p-8 border-4 border-black dark:border-white shadow-brutal">
-          <p class="text-slate-500 dark:text-slate-400 text-xs font-black uppercase tracking-widest">Inquiries Run</p>
-          <p class="text-4xl font-black mt-2 text-primary">{{ activity.inquiriesRun.toLocaleString() }}</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+        <div class="bg-white dark:bg-slate-900 p-4 sm:p-8 border-3 sm:border-4 border-black dark:border-white shadow-brutal">
+          <p class="text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-black uppercase tracking-widest">Inquiries Run</p>
+          <p class="text-2xl sm:text-4xl font-black mt-1 sm:mt-2 text-primary">{{ activity.inquiriesRun.toLocaleString() }}</p>
         </div>
-        <div class="bg-white dark:bg-slate-900 p-8 border-4 border-black dark:border-white shadow-brutal">
-          <p class="text-slate-500 dark:text-slate-400 text-xs font-black uppercase tracking-widest">Code Debugs</p>
-          <p class="text-4xl font-black mt-2 text-primary">{{ activity.codeDebugs.toLocaleString() }}</p>
+        <div class="bg-white dark:bg-slate-900 p-4 sm:p-8 border-3 sm:border-4 border-black dark:border-white shadow-brutal">
+          <p class="text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-black uppercase tracking-widest">Code Debugs</p>
+          <p class="text-2xl sm:text-4xl font-black mt-1 sm:mt-2 text-primary">{{ activity.codeDebugs.toLocaleString() }}</p>
         </div>
-        <div class="bg-primary p-8 border-4 border-black dark:border-white shadow-brutal">
-          <p class="text-white text-xs font-black uppercase tracking-widest">Day Streak</p>
-          <p class="text-4xl font-black mt-2 text-white">{{ activity.dayStreak }}</p>
+        <div class="bg-primary p-4 sm:p-8 border-3 sm:border-4 border-black dark:border-white shadow-brutal">
+          <p class="text-white text-[10px] sm:text-xs font-black uppercase tracking-widest">Day Streak</p>
+          <p class="text-2xl sm:text-4xl font-black mt-1 sm:mt-2 text-white">{{ activity.dayStreak }}</p>
         </div>
-        <div class="bg-white dark:bg-slate-900 p-8 border-4 border-black dark:border-white shadow-brutal">
-          <p class="text-slate-500 dark:text-slate-400 text-xs font-black uppercase tracking-widest">Days Active</p>
-          <p class="text-4xl font-black mt-2 text-primary">{{ activity.daysActive }}</p>
+        <div class="bg-white dark:bg-slate-900 p-4 sm:p-8 border-3 sm:border-4 border-black dark:border-white shadow-brutal">
+          <p class="text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs font-black uppercase tracking-widest">Days Active</p>
+          <p class="text-2xl sm:text-4xl font-black mt-1 sm:mt-2 text-primary">{{ activity.daysActive }}</p>
         </div>
       </div>
 
       <!-- Streak Section -->
-      <div class="bg-white dark:bg-slate-900 p-10 border-4 border-black dark:border-white shadow-brutal-lg">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <div class="bg-white dark:bg-slate-900 p-5 sm:p-10 border-3 sm:border-4 border-black dark:border-white shadow-brutal-lg">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-8">
           <div>
-            <h2 class="text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
+            <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
               {{ activity.dayStreak }} day streak
             </h2>
-            <p class="text-slate-600 dark:text-slate-400 mt-4 font-bold text-lg max-w-lg">
+            <p class="text-slate-600 dark:text-slate-400 mt-2 sm:mt-4 font-bold text-sm sm:text-lg max-w-lg">
               <template v-if="activity.dayStreak >= 7">Amazing! You've unlocked the 'Consistency' badge!</template>
               <template v-else-if="activity.dayStreak >= 3">Great going! Keep the momentum to unlock the 'Consistency' badge.</template>
               <template v-else>Start using Devora daily to build your streak!</template>
             </p>
           </div>
 
-          <div class="flex gap-4">
-            <div v-for="day in dayNames" :key="day" class="flex flex-col items-center gap-2">
-              <span class="text-xs font-black text-black dark:text-white uppercase">{{ day }}</span>
+          <div class="flex gap-2 sm:gap-4 justify-center sm:justify-end overflow-x-auto">
+            <div v-for="day in dayNames" :key="day" class="flex flex-col items-center gap-1 sm:gap-2 flex-shrink-0">
+              <span class="text-[10px] sm:text-xs font-black text-black dark:text-white uppercase">{{ day }}</span>
               <div
-                class="w-12 h-12 border-2 border-black dark:border-white flex items-center justify-center shadow-brutal-sm"
+                class="w-8 h-8 sm:w-12 sm:h-12 border-2 border-black dark:border-white flex items-center justify-center shadow-brutal-sm"
                 :class="activity.streakDays[day] ? 'bg-primary text-white' : 'bg-white dark:bg-slate-800 text-slate-300 dark:text-slate-600'"
               >
-                <span class="material-symbols-outlined font-black">
+                <span class="material-symbols-outlined font-black text-sm sm:text-base">
                   {{ activity.streakDays[day] ? 'check' : 'local_fire_department' }}
                 </span>
               </div>
@@ -127,9 +127,9 @@ if (!isLoggedIn.value) {
         </div>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-10">
+      <div class="grid md:grid-cols-2 gap-5 sm:gap-10">
         <!-- Language Usage -->
-        <div class="bg-white dark:bg-slate-900 p-8 border-4 border-black dark:border-white shadow-brutal">
+        <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 border-3 sm:border-4 border-black dark:border-white shadow-brutal">
           <h3 class="text-2xl font-black mb-8 flex items-center gap-3 uppercase tracking-tighter">
             <span class="material-symbols-outlined text-primary font-black">terminal</span>
             Language Usage
@@ -153,7 +153,7 @@ if (!isLoggedIn.value) {
         </div>
 
         <!-- Badges Section -->
-        <div class="bg-white dark:bg-slate-900 p-8 border-4 border-black dark:border-white shadow-brutal flex flex-col">
+        <div class="bg-white dark:bg-slate-900 p-5 sm:p-8 border-3 sm:border-4 border-black dark:border-white shadow-brutal flex flex-col">
           <h3 class="text-2xl font-black mb-8 flex items-center gap-3 uppercase tracking-tighter">
             <span class="material-symbols-outlined text-primary font-black">military_tech</span>
             Badges Earned
@@ -180,8 +180,8 @@ if (!isLoggedIn.value) {
       </div>
 
       <!-- Recent Activity -->
-      <div class="bg-white dark:bg-slate-900 border-4 border-black dark:border-white shadow-brutal-lg overflow-hidden">
-        <div class="px-8 py-6 border-b-4 border-black dark:border-white flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+      <div class="bg-white dark:bg-slate-900 border-3 sm:border-4 border-black dark:border-white shadow-brutal-lg overflow-hidden">
+        <div class="px-4 sm:px-8 py-4 sm:py-6 border-b-3 sm:border-b-4 border-black dark:border-white flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
           <h3 class="text-2xl font-black flex items-center gap-3 uppercase tracking-tighter">
             <span class="material-symbols-outlined text-primary font-black">history</span>
             Recent Activity
@@ -190,17 +190,17 @@ if (!isLoggedIn.value) {
         </div>
 
         <div v-if="activity.recentActivity.length > 0" class="divide-y-2 divide-black dark:divide-white">
-          <div v-for="(item, idx) in activity.recentActivity.slice(0, 10)" :key="idx" class="p-6 flex items-center justify-between hover:bg-primary/10 transition-colors">
-            <div class="flex items-center gap-6">
-              <div class="w-12 h-12 border-2 border-black dark:border-white text-black flex items-center justify-center shadow-brutal-sm" :class="item.color">
-                <span class="material-symbols-outlined font-black">{{ item.icon }}</span>
+          <div v-for="(item, idx) in activity.recentActivity.slice(0, 10)" :key="idx" class="p-3 sm:p-6 flex items-center justify-between hover:bg-primary/10 transition-colors gap-3">
+            <div class="flex items-center gap-3 sm:gap-6 min-w-0">
+              <div class="w-9 h-9 sm:w-12 sm:h-12 border-2 border-black dark:border-white text-black flex items-center justify-center shadow-brutal-sm flex-shrink-0" :class="item.color">
+                <span class="material-symbols-outlined font-black text-sm sm:text-base">{{ item.icon }}</span>
               </div>
-              <div>
-                <p class="text-base font-black uppercase">{{ item.title }}</p>
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-tight">{{ item.tags }}</p>
+              <div class="min-w-0">
+                <p class="text-xs sm:text-base font-black uppercase truncate">{{ item.title }}</p>
+                <p class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight truncate">{{ item.tags }}</p>
               </div>
             </div>
-            <p class="text-xs font-black text-slate-500 uppercase whitespace-nowrap">{{ getTimeAgo(item.time) }}</p>
+            <p class="text-[10px] sm:text-xs font-black text-slate-500 uppercase whitespace-nowrap flex-shrink-0">{{ getTimeAgo(item.time) }}</p>
           </div>
         </div>
 

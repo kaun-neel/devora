@@ -6,9 +6,11 @@ import { useUserStore } from '@/composables/useUserStore.js'
 const { currentUser, isLoggedIn, logout } = useUserStore()
 
 const showUserMenu = ref(false)
+const showMobileMenu = ref(false)
 
 const handleLogout = () => {
   showUserMenu.value = false
+  showMobileMenu.value = false
   logout()
 }
 
@@ -20,8 +22,8 @@ const userInitials = () => {
 </script>
 
 <template>
-  <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-3xl">
-    <div class="bg-white/90 backdrop-blur-md rounded-2xl border-2 border-black/10 shadow-lg px-6 py-3 flex items-center justify-between">
+  <nav class="fixed top-3 sm:top-6 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[92%] max-w-3xl">
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl border-2 border-black/10 shadow-lg px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
       <!-- Logo -->
       <RouterLink to="/" class="flex items-center gap-3">
         <div class="flex items-center">
@@ -29,10 +31,10 @@ const userInitials = () => {
           <span class="w-5 h-5 rounded-full bg-primary-dark inline-block -ml-2 opacity-80"></span>
           <span class="w-5 h-5 rounded-full bg-devora-tan inline-block -ml-2 opacity-70"></span>
         </div>
-        <span class="text-xl font-black tracking-tight text-[#1a1a2e] uppercase">DEVORA</span>
+        <span class="text-lg sm:text-xl font-black tracking-tight text-[#1a1a2e] uppercase">DEVORA</span>
       </RouterLink>
 
-      <!-- Nav Links -->
+      <!-- Nav Links (desktop) -->
       <div class="hidden md:flex items-center gap-8">
         <RouterLink to="/" class="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary transition-colors">Home</RouterLink>
         <RouterLink to="/code" class="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary transition-colors">Code</RouterLink>
@@ -40,8 +42,8 @@ const userInitials = () => {
         <RouterLink to="/profile" class="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary transition-colors">Profile</RouterLink>
       </div>
 
-      <!-- Auth Area -->
-      <div class="flex items-center gap-3">
+      <!-- Auth Area + Mobile Toggle -->
+      <div class="flex items-center gap-2 sm:gap-3">
         <template v-if="isLoggedIn">
           <!-- User Avatar Dropdown -->
           <div class="relative">
@@ -83,14 +85,35 @@ const userInitials = () => {
         </template>
 
         <template v-else>
-          <button @click="$emit('open-auth', 'login')" class="text-xs font-bold uppercase tracking-wide px-3 py-1.5 text-slate-600 hover:text-primary transition-colors">Log In</button>
-          <button @click="$emit('open-auth', 'signup')" class="bg-primary text-white text-xs font-bold uppercase tracking-wide px-5 py-2 rounded-lg hover:bg-primary-dark transition-colors">Sign Up</button>
+          <button @click="$emit('open-auth', 'login')" class="text-xs font-bold uppercase tracking-wide px-2 sm:px-3 py-1.5 text-slate-600 hover:text-primary transition-colors hidden sm:block">Log In</button>
+          <button @click="$emit('open-auth', 'signup')" class="bg-primary text-white text-xs font-bold uppercase tracking-wide px-3 sm:px-5 py-1.5 sm:py-2 rounded-lg hover:bg-primary-dark transition-colors">Sign Up</button>
         </template>
+
+        <!-- Mobile hamburger -->
+        <button @click="showMobileMenu = !showMobileMenu" class="md:hidden flex items-center justify-center w-9 h-9 rounded-lg hover:bg-slate-100 transition-colors ml-1">
+          <span class="material-symbols-outlined text-xl text-slate-700">{{ showMobileMenu ? 'close' : 'menu' }}</span>
+        </button>
       </div>
     </div>
 
-    <!-- Click-away listener for dropdown -->
-    <div v-if="showUserMenu" class="fixed inset-0 z-[-1]" @click="showUserMenu = false"></div>
+    <!-- Mobile Nav Dropdown -->
+    <Transition name="mobile-menu">
+      <div v-if="showMobileMenu" class="md:hidden mt-2 bg-white/95 backdrop-blur-md rounded-xl border-2 border-black/10 shadow-lg p-4 space-y-1">
+        <RouterLink to="/" @click="showMobileMenu = false" class="block px-4 py-3 text-sm font-bold uppercase tracking-widest text-slate-600 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors">Home</RouterLink>
+        <RouterLink to="/code" @click="showMobileMenu = false" class="block px-4 py-3 text-sm font-bold uppercase tracking-widest text-slate-600 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors">Code</RouterLink>
+        <RouterLink to="/debugger" @click="showMobileMenu = false" class="block px-4 py-3 text-sm font-bold uppercase tracking-widest text-slate-600 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors">Debugger</RouterLink>
+        <RouterLink to="/profile" @click="showMobileMenu = false" class="block px-4 py-3 text-sm font-bold uppercase tracking-widest text-slate-600 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors">Profile</RouterLink>
+        <template v-if="!isLoggedIn">
+          <div class="border-t border-slate-200 pt-3 mt-2 flex gap-2">
+            <button @click="showMobileMenu = false; $emit('open-auth', 'login')" class="flex-1 text-xs font-bold uppercase tracking-wide px-3 py-2.5 text-slate-600 hover:text-primary border-2 border-slate-200 rounded-lg transition-colors">Log In</button>
+            <button @click="showMobileMenu = false; $emit('open-auth', 'signup')" class="flex-1 bg-primary text-white text-xs font-bold uppercase tracking-wide px-3 py-2.5 rounded-lg hover:bg-primary-dark transition-colors">Sign Up</button>
+          </div>
+        </template>
+      </div>
+    </Transition>
+
+    <!-- Click-away listener -->
+    <div v-if="showUserMenu || showMobileMenu" class="fixed inset-0 z-[-1]" @click="showUserMenu = false; showMobileMenu = false"></div>
   </nav>
 </template>
 
@@ -101,4 +124,9 @@ const userInitials = () => {
 .dropdown-leave-active { transition: all 0.1s ease-in; }
 .dropdown-enter-from { transform: translateY(-8px); opacity: 0; }
 .dropdown-leave-to { transform: translateY(-8px); opacity: 0; }
+
+.mobile-menu-enter-active { transition: all 0.2s ease-out; }
+.mobile-menu-leave-active { transition: all 0.15s ease-in; }
+.mobile-menu-enter-from { transform: translateY(-8px); opacity: 0; }
+.mobile-menu-leave-to { transform: translateY(-8px); opacity: 0; }
 </style>
