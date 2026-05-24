@@ -18,7 +18,6 @@ DEVORA
  
 </div>
 </div>
----
  
 ## What is DEVORA?
  
