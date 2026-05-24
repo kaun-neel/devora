@@ -6,7 +6,7 @@
 <br/>
 
 <div align="center">
-## DEVORA
+### DEVORA
  
 ### AI-powered code generation, debugging, and community discovery  
 ### driven by local LLMs. Your code stays on your machine.
