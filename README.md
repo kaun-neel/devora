@@ -6,9 +6,9 @@
 <br/>
 
 <div align="center">
-# ⚡ DEVORA
+## DEVORA
  
-### AI-powered code generation, debugging, and community discovery —  
+### AI-powered code generation, debugging, and community discovery  
 ### driven by local LLMs. Your code stays on your machine.
  
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883?style=flat-square&logo=vue.js)](https://vuejs.org/)
@@ -16,6 +16,7 @@
 [![Ollama](https://img.shields.io/badge/Ollama-local%20AI-black?style=flat-square)](https://ollama.com/)
 [![License](https://img.shields.io/badge/license-proprietary-red?style=flat-square)]()
  
+</div>
 </div>
 ---
  
